@@ -1,5 +1,4 @@
-import * as slash from "https://raw.githubusercontent.com/DjDeveloperr/harmony/slash/deploy.ts";
-import { ChannelTypes } from "https://raw.githubusercontent.com/DjDeveloperr/harmony/slash/src/types/channel.ts";
+import * as slash from "https://raw.githubusercontent.com/DjDeveloperr/harmony/refactor/deploy.ts";
 
 // Pick up TOKEN and PUBLIC_KEY from ENV.
 slash.init({ env: true });
@@ -69,7 +68,7 @@ slash.handle("activity", (d) => {
   if (!channel || !activity) {
     return d.reply("Invalid interaction.", { ephemeral: true });
   }
-  if (channel.type !== ChannelTypes.GUILD_VOICE) {
+  if (channel.type !== slash.ChannelTypes.GUILD_VOICE) {
     return d.reply("Activities can only be started in Voice Channels.", {
       ephemeral: true,
     });
@@ -89,7 +88,7 @@ slash.handle("activity", (d) => {
       );
     })
     .catch((e) => {
-      console.log(e);
+      console.log("Failed", e);
       d.reply("Failed to start Activity.", { ephemeral: true });
     });
 });
@@ -97,7 +96,10 @@ slash.handle("activity", (d) => {
 slash.handle("invite", (d) => {
   d.reply(
     `• [Click here to invite.](<https://discord.com/oauth2/authorize?client_id=779741162465525790&permissions=1609952503&scope=bot%20applications.commands>)\n` +
-    `• [Join our Discord.](<https://discord.gg/d98jT3mgxf>)`,
-    { ephemeral: true },
+      `• [Join our Discord.](<https://discord.gg/d98jT3mgxf>)`,
+    { ephemeral: true }
   );
 });
+
+slash.handle("*", (d) => d.reply("Unhandled Command", { ephemeral: true }));
+slash.client.on("interactionError", console.log);
